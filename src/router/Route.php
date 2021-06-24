@@ -6,12 +6,13 @@ class Route {
         
     }
 
+    private static $middleware = array();
     private static $uris = array();
 
     public static function add($method, $uri, $function = null) {
         Route::$uris[] = new Uri(self::parseUri($uri), $method, $function);
         //Retornará un Middleware...
-        return;
+        return Route::$uris[count(Route::$uris)-1];
     }
 
     public static function get($uri, $function = null) {
@@ -34,7 +35,7 @@ class Route {
         return Route::add("ANY", $uri, $function);
     }
 
-    private function parseUri($uri) {
+    private static function parseUri($uri) {
         $uri = trim($uri, '/');
         $uri = (strlen($uri) > 0) ? $uri : '/';
         return $uri;

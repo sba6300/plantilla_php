@@ -8,11 +8,14 @@ class Uri {
     var $matches;
     protected $request;
     protected $response;
-
+    private $middleware;
     public function __construct($uri, $method, $function) {
         $this->uri = $uri;
         $this->method = $method;
         $this->function = $function;
+    }
+    public function Middleware($middleware=[]){
+        $this->middleware = $middleware;
     }
 
     public function match($url) {
@@ -82,6 +85,17 @@ class Uri {
     public function call() {
         try {
             $this->request = $_REQUEST;
+            if (!is_null($this->middleware) && is_array($this->middleware)){
+                foreach ($this->middleware as $middle){
+                    $clas_middle = new $middle;
+                    if ($clas_middle->valid()){
+                        $clas_middle->is_true();
+                    }else{
+                        $clas_middle->is_false();
+                    }
+                }
+            }
+
             if (is_string($this->function)) {
                 $this->functionFromController();
             } else {
