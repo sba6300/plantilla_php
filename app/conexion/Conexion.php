@@ -1,40 +1,23 @@
 <?php
 
-class Conexion {
+class Conexion
+{
+    private $servername = HOST_SS;
+    private $username = USER_SS;
+    private $password = PASSWORD_SS;
+    private $bd=DATABASE_SS;
+    private $conn;
 
-    private $conexion;
-    private $configuracion = [
-        "driver" => "mysql",
-        "host" => "localhost",
-        "database" => "proyecto1",
-        "port" => "3306",
-        "username" => "root",
-        "password" => "",
-        "charset" => "utf8mb4"
-    ];
-
-    public function __construct() {
-        
+    function getConexion()
+    {
+        $this->conn = new mysqli($this->servername, $this->username, $this->password, $this->bd);
+        $this->conn->set_charset("utf8");
+        return $this->conn;
     }
 
-    public function conectar() {
-        try {
-            $CONTROLADOR = $this->configuracion["driver"];
-            $SERVIDOR = $this->configuracion["host"];
-            $BASE_DATOS = $this->configuracion["database"];
-            $PUERTO = $this->configuracion["port"];
-            $USUARIO = $this->configuracion["username"];
-            $CLAVE = $this->configuracion["password"];
-            $CODIFICACION = $this->configuracion["charset"];
-
-            $url = "{$CONTROLADOR}:host={$SERVIDOR}:{$PUERTO};"
-                    . "dbname={$BASE_DATOS};charset={$CODIFICACION}";
-            //Se crea la conexión.
-            $this->conexion = new PDO($url, $USUARIO, $CLAVE);
-            return $this->conexion;
-        } catch (Exception $exc) {
-            echo $exc->getTraceAsString();
-        }
+    function closeConexion()
+    {
+        $this->conn->close();
     }
-
 }
+
